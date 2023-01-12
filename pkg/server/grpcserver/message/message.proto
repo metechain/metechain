@@ -1,0 +1,221 @@
+syntax = "proto3";
+
+package message;
+
+option go_package ="../message";
+
+message req_balance { string address = 1; }
+message res_balance { string balance = 1; }
+
+message req_transaction {
+  string From = 1;
+  string To = 2;
+  string Amount = 3;
+  uint64 Nonce = 4;
+  bytes Sign = 5;
+  string GasLimit =6;
+  string GasFeeCap =7;
+  string GasPrice = 8;
+  bytes  Input = 9;
+}
+message res_transaction { string Hash = 1; }
+
+message req_block_by_number { uint64 height = 1; }
+message req_block_by_hash { string hash = 1; }
+message resp_block {
+  int32 code = 1;
+  string message = 2;
+  bytes data = 3;
+}
+
+message Tx {
+  uint64 Version = 1;
+  uint64 Type = 2;
+  string Amount = 3;
+  string From = 4;
+  string To = 5;
+  string GasPrice = 6;
+  string GasFeeCap = 7;
+  string GasLimit = 8;
+  bytes Input = 9;
+  uint64 Nonce = 10;
+}
+
+message block {
+  uint64 Height = 1;
+  string PrevBlockHash = 2;
+  string  Hash = 3;
+  uint64 Version = 4;
+  string Timestamp = 5;
+  repeated Tx Txs = 6;
+  string Root = 7;
+  string Miner = 8;
+  uint64 Nonce = 9;
+  string GasUsed = 10;
+  uint64 GasLimit = 11;
+}
+
+message resp_block_date{
+  int32 code = 1;
+  bytes data = 2;
+  string message = 3;
+}
+
+message req_tx_by_hash { string hash = 1; }
+message resp_tx_by_hash {
+  int32 code = 1;
+  bytes data = 2;
+  string message = 3;
+}
+
+message respose_nonce { uint64 nonce = 1; }
+
+message req_nonce { string address = 1; }
+
+message req_max_blockHeight{}
+message res_max_blockHeight{uint64 max_height = 1;}
+
+
+message req_eth_sign_transaction{
+  string ethFrom = 1;
+  string ethData = 2;
+  string ktoFrom = 3;
+  bytes msgHash = 4; 
+}
+message res_eth_sign_transaction {string hash = 1;}
+
+message req_call_contract{
+  string inputcode = 1;
+  string origin = 2;
+  string contractaddress = 3;
+  string value = 4;
+}
+message res_call_contract{
+  string msg = 1;
+  string result = 2;
+  string gas = 3;
+  int32 code = 4;
+}
+
+message req_evm_getcode{
+  string contract = 1;
+}
+message res_evm_getcode{
+  string code = 1;
+}
+
+message req_getstorage{
+  string addr = 1;
+  string hash = 2;
+}
+message res_getstorage{
+  string result = 1;
+}
+
+message req_logs{
+  string address = 1;
+  uint64 fromBlock = 2;
+  uint64 toBlock = 3;
+  repeated string topics = 4;
+  string blockHash = 5;  
+}
+
+message res_logs{
+  bytes evmlogs = 1;
+}
+
+
+
+message hashMsg {
+  int64 code = 1;
+  string message = 2;
+  string hash = 3;
+}
+
+
+
+
+message req_sign_balance {
+  string from = 1;
+  string to = 2;
+}
+
+
+
+message req_hasher_per_second{
+}
+
+message res_hasher_per_second{
+  string address = 1;
+  string uuid = 2;
+  float hasherPerSecond = 3;
+}
+
+message req_WithdrawToEthaddr {
+  string From = 1;
+  string To = 2;
+  string Amount = 3;
+  uint64 Nonce = 4;
+  bytes Sign = 5;
+  string GasLimit =6;
+  string GasFeeCap =7;
+  string GasPrice = 8;
+  bytes  Input = 9;
+}
+message res_WithdrawToEthaddr { string Hash = 1; }
+
+/* message req_basePledge { }
+message resp_basePledge { uint64 TotalNumber= 1; } */
+
+service Greeter {
+ rpc GetBalance (req_balance) returns (res_balance) {}
+ rpc SendTransaction(req_transaction) returns(res_transaction) {}
+ /* rpc SendLockTransaction(req_transaction) returns(res_transaction) {}
+ rpc SendUnlockTransaction(req_transaction) returns(res_transaction) {} */
+ rpc GetBlockByNum(req_block_by_number) returns(resp_block) {}
+ rpc GetTxByHash(req_tx_by_hash) returns(resp_tx_by_hash) {}
+ rpc GetAddressNonceAt(req_nonce) returns(respose_nonce) {}
+ rpc GetBlockByHash(req_block_by_hash) returns(resp_block_date) {}
+ rpc GetMaxBlockHeight(req_max_blockHeight)returns(res_max_blockHeight){}
+/*  rpc GetAllFreezeBalance(req_balance)returns(res_balance){}
+ rpc GetSingleFreezeBalance(req_sign_balance)returns(res_balance){}
+ rpc GetBasePledge(req_basePledge)returns(resp_basePledge){} */
+
+  ////Token////
+
+  /* rpc CreateToken(req_token_create) returns(hashMsg) {}
+  rpc MintToken(req_token_create) returns(hashMsg) {}
+  rpc SendToken(req_token_transaction) returns(resp_token_transaction) {}
+  rpc GetBalanceToken(req_token_balance) returns(resp_token_balance) {} */
+  
+ /*  ////contract////
+  rpc GetETHAddress(req_kto_address)returns(res_eth_address){}
+
+  rpc GetKTOAddress(req_eth_address)returns(res_kto_address){} */
+  
+  //rpc SendBindingAddressTransaction(req_bindingaddr_transaction)returns(res_transaction){}
+
+ /*  rpc SendEthSignedRawTransaction(req_eth_sign_transaction)returns(res_eth_sign_transaction){}
+
+  rpc CallSmartContract(req_call_contract)returns(res_call_contract){}
+
+  rpc GetCode(req_evm_getcode)returns(res_evm_getcode){}
+
+  rpc GetStorageAt(req_getstorage)returns(res_getstorage){}
+  
+  rpc GetLogs(req_logs)returns(res_logs){}
+
+  //rpc SendKtoSigned20TokenTransaction(req_transfer20token)returns(res_transfer20token){}
+
+  //rpc SendSignedPledgeTransaction(req_pledge_transaction)returns(res_pledge_transaction){}
+
+  //rpc GetTotalPledge(req_kto_address)returns(res_pledge){}
+  /////contract////
+
+  //rpc GetWholeNetworkPledge(req_wholeNetworkPledge)returns(res_wholeNetworkPledge){}
+  // rpc GetAvailableBalance(req_getAvailableBalance)returns(res_getAvailableBalance){}
+
+  rpc GetHasherPerSecond(req_hasher_per_second)returns(res_hasher_per_second){}
+
+  rpc WithdrawToEthaddr(req_WithdrawToEthaddr)returns(res_WithdrawToEthaddr){} */
+}
